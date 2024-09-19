@@ -1,0 +1,86 @@
+using System;
+
+public class Veiculo
+{
+    public string Placa { get; set; }
+    public DateTime Entrada { get; set; }
+
+    public Veiculo(string placa, DateTime entrada)
+    {
+        Placa = placa;
+        Entrada = entrada;
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class Estacionamento
+{
+    private List<Veiculo> veiculos = new List<Veiculo>();
+    private const decimal PrecoPorHora = 5.00m; 
+
+    public void AdicionarVeiculo(string placa)
+    {
+        var veiculo = new Veiculo(placa, DateTime.Now);
+        veiculos.Add(veiculo);
+        Console.WriteLine("Veículo"  + placa + "adicionado.");
+    }
+
+    public void RemoverVeiculo(string placa)
+    {
+        var veiculo = veiculos.FirstOrDefault(v => v.Placa == placa);
+        if (veiculo == null)
+        {
+            Console.WriteLine("Veículo não encontrado.");
+            return;
+        }
+
+        var tempoEstacionado = DateTime.Now - veiculo.Entrada;
+        var valorCobrado = (decimal)Math.Ceiling(tempoEstacionado.TotalHours) * PrecoPorHora;
+
+        veiculos.Remove(veiculo);
+        Console.WriteLine("Veículo" + placa + "removido.");
+        Console.WriteLine("Tempo estacionado:" + tempoEstacionado.TotalHours + "horas");
+        Console.WriteLine("Valor cobrado:" + valorCobrado:C");
+    }
+
+    public void ListarVeiculos()
+    {
+        if (!veiculos.Any())
+        {
+            Console.WriteLine("Nenhum veículo no estacionamento.");
+            return;
+        }
+
+        Console.WriteLine("Veículos no estacionamento:");
+        foreach (var veiculo in veiculos)
+        {
+            Console.WriteLine($"Placa: {veiculo.Placa}, Entrada: {veiculo.Entrada}");
+        }
+    }
+}
+
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        var estacionamento = new Estacionamento();
+
+        estacionamento.AdicionarVeiculo("ABC123");
+        estacionamento.AdicionarVeiculo("XYZ789");
+
+        Console.WriteLine();
+        estacionamento.ListarVeiculos();
+
+        Console.WriteLine();
+        estacionamento.RemoverVeiculo("ABC123");
+
+        Console.WriteLine();
+        estacionamento.ListarVeiculos();
+    }
+}
+
